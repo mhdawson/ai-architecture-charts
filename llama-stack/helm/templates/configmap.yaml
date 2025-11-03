@@ -50,6 +50,9 @@ data:
         provider_type: inline::sentence-transformers
         config: {}
       vector_io:
+      {{- with .Values.providers.vector_io }}
+      {{- toYaml . | nindent 6 }}
+      {{- else }}
       - provider_id: pgvector
         provider_type: remote::pgvector
         config:
@@ -61,6 +64,7 @@ data:
           kvstore:
             type: sqlite
             db_path: ${env.SQLITE_STORE_DIR:=~/.llama/distributions/starter}/pgvector_registry.db
+      {{- end }}
       files:
       - provider_id: meta-reference-files
         provider_type: inline::localfs
